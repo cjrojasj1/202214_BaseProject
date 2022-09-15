@@ -44,9 +44,9 @@ describe('SupermercadoService', () => {
   });
 
   it('findAll debería retornar todos los supermercados', async () => {
-    const supermercadoes: SupermercadoEntity[] = await service.findAll();
-    expect(supermercadoes).not.toBeNull();
-    expect(supermercadoes).toHaveLength(supermercadosList.length);
+    const supermercados: SupermercadoEntity[] = await service.findAll();
+    expect(supermercados).not.toBeNull();
+    expect(supermercados).toHaveLength(supermercadosList.length);
   });
 
   it('findOne debería retornar un supermercado por ID', async () => {
@@ -133,7 +133,7 @@ describe('SupermercadoService', () => {
     await expect(() => service.update("0", supermercado)).rejects.toHaveProperty("message", "El supermercado con el ID dado no fue encontrado")
   });
 
-  it('delete debería eliminar una supermercado', async () => {
+  it('delete debería eliminar un supermercado', async () => {
     const supermercado: SupermercadoEntity = supermercadosList[0];
     await service.delete(supermercado.id);
   
@@ -141,7 +141,7 @@ describe('SupermercadoService', () => {
     expect(deletedSupermercado).toBeNull();
   });
 
-  it('delete debería arrojar una excepción por supermercado inválida', async () => {
+  it('delete debería arrojar una excepción por supermercado inválido', async () => {
     const supermercado: SupermercadoEntity = supermercadosList[0];
     await service.delete(supermercado.id);
     await expect(() => service.delete("0")).rejects.toHaveProperty("message", "El supermercado con el ID dado no fue encontrado")
