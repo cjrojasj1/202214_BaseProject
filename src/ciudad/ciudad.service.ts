@@ -7,6 +7,8 @@ import { CiudadEntity } from './ciudad.entity';
 
 @Injectable()
 export class CiudadService {
+    private listaPaises = ['Argentina', 'Ecuador', 'Paraguays']
+
     constructor(
         @InjectRepository(CiudadEntity)
         private readonly ciudadRepository: Repository<CiudadEntity>
@@ -25,6 +27,9 @@ export class CiudadService {
     }
     
     async create(ciudad: CiudadEntity): Promise<CiudadEntity> {
+        let paisValido = this.listaPaises.filter(s => s.includes(ciudad.pais))
+        if (!paisValido)
+          throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
         return await this.ciudadRepository.save(ciudad);
     }
 
@@ -32,7 +37,10 @@ export class CiudadService {
         const persistedCiudad: CiudadEntity = await this.ciudadRepository.findOne({where:{id}});
         if (!persistedCiudad)
           throw new BusinessLogicException("La ciudad con el ID dado no fue encontrada", BusinessError.NOT_FOUND);
-        
+        let paisValido = this.listaPaises.filter(s => s.includes(ciudad.pais))
+        if (!paisValido)
+            throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
+          
         return await this.ciudadRepository.save({...persistedCiudad, ...ciudad});
     }
 

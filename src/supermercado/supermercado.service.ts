@@ -7,6 +7,9 @@ import { SupermercadoEntity } from './supermercado.entity';
 
 @Injectable()
 export class SupermercadoService {
+
+    public minLongNombreSupermercado = 10
+
     constructor(
         @InjectRepository(SupermercadoEntity)
         private readonly supermercadoRepository: Repository<SupermercadoEntity>
@@ -25,6 +28,8 @@ export class SupermercadoService {
     }
     
     async create(supermercado: SupermercadoEntity): Promise<SupermercadoEntity> {
+        if (supermercado.nombre.length <= this.minLongNombreSupermercado)
+            throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.NOT_FOUND);
         return await this.supermercadoRepository.save(supermercado);
     }
 
@@ -32,7 +37,8 @@ export class SupermercadoService {
         const persistedSupermercado: SupermercadoEntity = await this.supermercadoRepository.findOne({where:{id}});
         if (!persistedSupermercado)
           throw new BusinessLogicException("El supermercado con el ID dado no fue encontrado", BusinessError.NOT_FOUND);
-        
+        if (supermercado.nombre.length <= this.minLongNombreSupermercado)
+          throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.NOT_FOUND);
         return await this.supermercadoRepository.save({...persistedSupermercado, ...supermercado});
     }
 
