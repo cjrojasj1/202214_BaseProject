@@ -16,11 +16,11 @@ export class SupermercadoService {
     ){}
 
     async findAll(): Promise<SupermercadoEntity[]> {
-        return await this.supermercadoRepository.find({ relations: ["artworks", "exhibitions"] });
+        return await this.supermercadoRepository.find({ relations: ["sedes"] });
     }
 
     async findOne(id: string): Promise<SupermercadoEntity> {
-        const supermercado: SupermercadoEntity = await this.supermercadoRepository.findOne({where: {id}, relations: ["artworks", "exhibitions"] } );
+        const supermercado: SupermercadoEntity = await this.supermercadoRepository.findOne({where: {id}, relations: ["sedes"] } );
         if (!supermercado)
           throw new BusinessLogicException("El supermercado con el ID dado no fue encontrado", BusinessError.NOT_FOUND);
     
