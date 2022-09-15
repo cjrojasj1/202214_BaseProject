@@ -1,8 +1,9 @@
-import { SupermercadoEntity } from 'src/supermercado/supermercado.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { SupermercadoEntity } from '../supermercado/supermercado.entity';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CiudadEntity {
+    
     @PrimaryGeneratedColumn('uuid')
     id: string;
     
@@ -16,6 +17,7 @@ export class CiudadEntity {
     habitantes: number;
 
     @ManyToMany(() => SupermercadoEntity, ciudad => ciudad.sedes)
+    @JoinTable()
     supermercados: SupermercadoEntity[];    
 
 }

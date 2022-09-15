@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BusinessError, BusinessLogicException } from 'src/shared/errors/business-errors';
+import { BusinessError, BusinessLogicException } from '../shared/errors/business-errors';
 import { Repository } from 'typeorm';
 import { CiudadEntity } from './ciudad.entity';
 
 @Injectable()
 export class CiudadService {
-    private listaPaises = ['Argentina', 'Ecuador', 'Paraguays']
+    private listaPaises = ['Argentina', 'Ecuador', 'Paraguay']
 
     constructor(
         @InjectRepository(CiudadEntity)
@@ -15,11 +15,11 @@ export class CiudadService {
     ){}
 
     async findAll(): Promise<CiudadEntity[]> {
-        return await this.ciudadRepository.find({ relations: ["artworks", "exhibitions"] });
+        return await this.ciudadRepository.find({ relations: ["supermercados"] });
     }
 
     async findOne(id: string): Promise<CiudadEntity> {
-        const ciudad: CiudadEntity = await this.ciudadRepository.findOne({where: {id}, relations: ["artworks", "exhibitions"] } );
+        const ciudad: CiudadEntity = await this.ciudadRepository.findOne({where: {id}, relations: ["supermercados"] } );
         if (!ciudad)
           throw new BusinessLogicException("La ciudad con el ID dado no fue encontrada", BusinessError.NOT_FOUND);
     
@@ -27,7 +27,7 @@ export class CiudadService {
     }
     
     async create(ciudad: CiudadEntity): Promise<CiudadEntity> {
-        let paisValido = this.listaPaises.filter(s => s.includes(ciudad.pais))
+        let paisValido = this.listaPaises.find(s => s == ciudad.pais)
         if (!paisValido)
           throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
         return await this.ciudadRepository.save(ciudad);
@@ -37,8 +37,8 @@ export class CiudadService {
         const persistedCiudad: CiudadEntity = await this.ciudadRepository.findOne({where:{id}});
         if (!persistedCiudad)
           throw new BusinessLogicException("La ciudad con el ID dado no fue encontrada", BusinessError.NOT_FOUND);
-        let paisValido = this.listaPaises.filter(s => s.includes(ciudad.pais))
-        if (!paisValido)
+          let paisValido = this.listaPaises.find(s => s == ciudad.pais)
+          if (!paisValido)
             throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
           
         return await this.ciudadRepository.save({...persistedCiudad, ...ciudad});
