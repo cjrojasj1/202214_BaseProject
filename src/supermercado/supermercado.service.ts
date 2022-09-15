@@ -29,16 +29,16 @@ export class SupermercadoService {
     
     async create(supermercado: SupermercadoEntity): Promise<SupermercadoEntity> {
         if (supermercado.nombre.length <= this.minLongNombreSupermercado)
-            throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.NOT_FOUND);
+            throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.PRECONDITION_FAILED);
         return await this.supermercadoRepository.save(supermercado);
     }
 
-    async update(id: string, supermercado: SupermercadoEntity): Promise<SupermercadoEntity> {
-        const persistedSupermercado: SupermercadoEntity = await this.supermercadoRepository.findOne({where:{id}});
+    async update(idCiudad: string, supermercado: SupermercadoEntity): Promise<SupermercadoEntity> {
+        const persistedSupermercado: SupermercadoEntity = await this.supermercadoRepository.findOne({where:{id: idCiudad}});
         if (!persistedSupermercado)
           throw new BusinessLogicException("El supermercado con el ID dado no fue encontrado", BusinessError.NOT_FOUND);
         if (supermercado.nombre.length <= this.minLongNombreSupermercado)
-          throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.NOT_FOUND);
+          throw new BusinessLogicException("El nombre del supermercado debe tener más de " + this.minLongNombreSupermercado + " letras", BusinessError.PRECONDITION_FAILED);
         return await this.supermercadoRepository.save({...persistedSupermercado, ...supermercado});
     }
 

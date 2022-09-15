@@ -29,17 +29,17 @@ export class CiudadService {
     async create(ciudad: CiudadEntity): Promise<CiudadEntity> {
         let paisValido = this.listaPaises.find(s => s == ciudad.pais)
         if (!paisValido)
-          throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
+          throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.PRECONDITION_FAILED);
         return await this.ciudadRepository.save(ciudad);
     }
 
-    async update(id: string, ciudad: CiudadEntity): Promise<CiudadEntity> {
-        const persistedCiudad: CiudadEntity = await this.ciudadRepository.findOne({where:{id}});
+    async update(idCiudad: string, ciudad: CiudadEntity): Promise<CiudadEntity> {
+        const persistedCiudad: CiudadEntity = await this.ciudadRepository.findOne({where:{id: idCiudad}});
         if (!persistedCiudad)
           throw new BusinessLogicException("La ciudad con el ID dado no fue encontrada", BusinessError.NOT_FOUND);
-          let paisValido = this.listaPaises.find(s => s == ciudad.pais)
-          if (!paisValido)
-            throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.NOT_FOUND);
+        let paisValido = this.listaPaises.find(s => s == ciudad.pais)
+        if (!paisValido)
+            throw new BusinessLogicException("El país con el nombre asociado no está permitido", BusinessError.PRECONDITION_FAILED);
           
         return await this.ciudadRepository.save({...persistedCiudad, ...ciudad});
     }
